@@ -109,9 +109,9 @@ public class Ground {
     }
 
     public boolean collisionRight(int x, int y) {
-        Log.d("checkXY", "collisionRight: y, x" + (y / MAPCHIP_SIZE) + "," + (x / MAPCHIP_SIZE + pos_x));
+        Log.d("checkXY", "collisionRight: y, x" + (y / MAPCHIP_SIZE + 1) + "," + (x / MAPCHIP_SIZE + pos_x));
         //Log.d("check_cell", "collisionRight: " + mapcell[stage.get(y / MAPCHIP_SIZE).get(((x - 10) + (pos_x * MAPCHIP_SIZE)) / MAPCHIP_SIZE)].getGrafic());
-        return mapcell[stage.get(y / MAPCHIP_SIZE).get(x / MAPCHIP_SIZE + pos_x)].getMoveFlag();
+        return mapcell[stage.get(y / MAPCHIP_SIZE + 1).get(x / MAPCHIP_SIZE + pos_x)].getMoveFlag();
     }
 
     public boolean collisionLeft(int x, int y) {
