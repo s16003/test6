@@ -14,6 +14,8 @@ import java.util.List;
 public class Map {
     private List<List<Integer>> stage = new ArrayList<>();
     private int flag = 0;
+    private int row;
+    private int col;
     private InputStream[] is;
     private BufferedReader br;
     private String[] list;
@@ -23,19 +25,23 @@ public class Map {
     }
 
     public List<List<Integer>> mapCreate() {
-        for (int i = 0; i < 29; i++) {
-            stage.add(new ArrayList<Integer>());
-        }
         try {
             try {
                 br = new BufferedReader(new InputStreamReader(is[0]));
 
-                String str;
+                String str = br.readLine();
+                row = Integer.parseInt(str);
+                str = br.readLine();
+                col = Integer.parseInt(str);
+
+                for (int i = 0; i < col; i++) {
+                    stage.add(new ArrayList<Integer>());
+                }
                 int count = 0;
                 while((str = br.readLine()) != null) {
                     list = str.split(",");
 
-                    for (int j = 0; j < 153; j++) {
+                    for (int j = 0; j < row; j++) {
                         stage.get(count).add(Integer.parseInt(list[j]));
                     }
 
