@@ -122,7 +122,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
             bullet.draw(canvas, power);
             bullet.move(shoot);
-            ground.collisionHadou(bullet.getPosX(), bullet.getPosY());
+            ground.collisionHadou(bullet.getPosX(), bullet.getTop(), bullet.getBottom());
         }
     }
 
@@ -148,13 +148,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void attack_push() {
         power = 0;
-        droid.attack(6);
         shoot = false;
         inputFlag |= 0x08;
     }
 
     public void attack_pull() {
-        droid.attack(7);
+        droid.attack();
         shoot = true;
         inputFlag &= ~0x0F;
     }
@@ -200,6 +199,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if (power > 75) return;
             if (bullet != null) bullet = null;
             power++;
+            droid.charge();
             bullet = new WaveBullet(droid.getLeft(), droid.getTop(), hadou);
             return;
         }

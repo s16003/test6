@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             is[0] = this.getAssets().open("stage01.dat");
         } catch (IOException e) {
         }
+
         /*
         for (int i = 0; i < 29; i++) {
             stage.add(new ArrayList<Integer>());

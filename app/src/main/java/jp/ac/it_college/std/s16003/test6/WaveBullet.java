@@ -15,6 +15,7 @@ public class WaveBullet {
     private final int HADOU_HALFSIZE;
     private Rect hadou_src;
     private Rect hadou_dst = new Rect();
+    private int power;
     private int pos_x;
     private int pos_y;
     private int p;
@@ -37,7 +38,7 @@ public class WaveBullet {
     }
 
     public void draw(Canvas canvas, int power) {
-        p = power;
+        this.power = power;
         hadou_dst.set(
                 pos_x - HADOU_HALFSIZE - power,
                 pos_y - HADOU_HALFSIZE - power + 30,
@@ -48,6 +49,14 @@ public class WaveBullet {
 
     public int getPosX() {
         return pos_x;
+    }
+
+    public int getTop() {
+        return pos_y - HADOU_HALFSIZE - power + 30;
+    }
+
+    public int getBottom() {
+        return pos_y + HADOU_HALFSIZE + power + 30;
     }
 
     public int getPosY() {

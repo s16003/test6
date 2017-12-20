@@ -31,8 +31,12 @@ public class Droid {
     private double porse = 3;
     private final int GRAVITY = 1;
     private int vy;
-
     private int width;
+    private Rect hp_dst = new Rect();
+    private Guage hp;
+    private Guage mp;
+    private Paint mpColor = new Paint();
+    private Paint hpColor = new Paint();
 
     private int y_prev;
     private int f = 2;
@@ -52,6 +56,13 @@ public class Droid {
         pos_y = 64 * 7;
 
         y_prev = pos_y;
+
+        hpColor.setColor(Color.GREEN);
+        mpColor.setColor(Color.BLUE);
+
+
+        hp = new Guage(10, 10, 410, 60, hpColor);
+        mp = new Guage(10, 80, 410, 130, mpColor);
 
         center.set(
                 width / 2 + 13,
@@ -84,6 +95,8 @@ public class Droid {
                 pos_y - PLAYER_HALFSIZE,
                 pos_x + PLAYER_HALFSIZE + moveX,
                 pos_y + PLAYER_HALFSIZE);
+        hp.draw(canvas);
+        mp.draw(canvas);
         canvas.drawBitmap(PLAYER, player_src[(int) porse], player_dst, null);
 
     }
@@ -140,8 +153,17 @@ public class Droid {
         }
     }
 
-    public void attack(int a) {
-        porse = a;
+    public void charge() {
+        porse = 6;
+        mp.decrease();
+    }
+
+    public void store() {
+        mp.increase();
+    }
+
+    public void attack() {
+        porse = 7;
     }
     /*
     public void jump(boolean onGround) {

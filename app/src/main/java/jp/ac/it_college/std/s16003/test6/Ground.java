@@ -109,7 +109,7 @@ public class Ground {
         //Log.d("checkleft", "collisionBottom: left" + left);
         //Log.d("checkright", "collisionBottom: right" + right);
         left = left / MAPCHIP_SIZE + pos_x;
-        right = right / MAPCHIP_SIZE + pos_x - 1;
+        right = right / MAPCHIP_SIZE + pos_x;
 
 
 
@@ -139,15 +139,19 @@ public class Ground {
         return mapcell[stage.get(y / MAPCHIP_SIZE - 2).get(x / MAPCHIP_SIZE + moveX)].getMoveFlag();
     }
 
-    public void collisionHadou(int x, int y) {
+    public void collisionHadou(int x, int top, int bottom) {
         x = x / MAPCHIP_SIZE + pos_x;
-        y = y / MAPCHIP_SIZE + 1;
-        Log.d("checkX", "collisionHadou: x " + x);
-        Log.d("checkY", "collisionHadou: x " + y);
+        //y = y / MAPCHIP_SIZE + 1;
+        top = top / MAPCHIP_SIZE + 1;
+        bottom = bottom / MAPCHIP_SIZE + 2;
 
-        if (stage.get(y).get(x) != 0) {
-            stage.get(y).set(x, 0);
-            Log.d("check_hadou", "collisionHadou: ok");
+        Log.d("checkTop", "collisionHadou: top" + top);
+        Log.d("checkBottom", "collisionHadou: top" + bottom);
+
+        //if (stage.get(y).get(x) != 0) {
+        for (int i = top; i < bottom; i++) {
+            //stage.get(y).set(x, 0);
+            stage.get(i).set(x, 0);
         }
     }
 
