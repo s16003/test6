@@ -3,6 +3,7 @@ package jp.ac.it_college.std.s16003.test6;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
 
 /**
  * Created by s16003 on 17/12/08.
@@ -16,8 +17,9 @@ public class WaveBullet {
     private Rect hadou_dst = new Rect();
     private int pos_x;
     private int pos_y;
+    private int p;
 
-    public WaveBullet(int height, int width, Bitmap hadou) {
+    public WaveBullet(int width, int height, Bitmap hadou) {
         this.hadou = hadou;
         HADOU_SIZE = hadou.getWidth();
         HADOU_HALFSIZE = HADOU_SIZE / 2;
@@ -31,15 +33,24 @@ public class WaveBullet {
         if (!shoot) {
             return;
         }
-        pos_x += 5;
+        pos_x += 13;
     }
 
     public void draw(Canvas canvas, int power) {
+        p = power;
         hadou_dst.set(
-                pos_x - HADOU_HALFSIZE + 75 + power,
-                pos_y - HADOU_HALFSIZE - 75 + power,
-                pos_x + HADOU_HALFSIZE + 75 + power,
-                pos_y + HADOU_HALFSIZE - 75 + power);
+                pos_x - HADOU_HALFSIZE - power,
+                pos_y - HADOU_HALFSIZE - power + 30,
+                pos_x + HADOU_HALFSIZE + power,
+                pos_y + HADOU_HALFSIZE + power + 30);
         canvas.drawBitmap(hadou, hadou_src, hadou_dst, null);
+    }
+
+    public int getPosX() {
+        return pos_x;
+    }
+
+    public int getPosY() {
+        return pos_y;
     }
 }
