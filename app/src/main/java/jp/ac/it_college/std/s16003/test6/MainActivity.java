@@ -97,24 +97,20 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         switch (view.getId()) {
             case R.id.left:
                 if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    Log.d("touch", "onTouch: left down");
                     gameView.left();
                     break;
                 }
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    Log.d("touch", "onTouch: left up");
                     gameView.resetFlag();
                     break;
                 }
                 break;
             case R.id.right:
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    Log.d("touch", "onTouch: right down");
                     gameView.right();
                     break;
                 }
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    Log.d("touch", "onTouch: right up");
                     gameView.resetFlag();
                     break;
                 }

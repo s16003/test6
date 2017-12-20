@@ -28,13 +28,12 @@ public class Droid {
     private final Bitmap PLAYER;
     private final Bitmap HADOU;
     private int moveX;
-    private int porse = 3;
+    private double porse = 3;
     private final int GRAVITY = 1;
     private int vy;
 
     private int width;
 
-    private int y_move = 0;
     private int y_prev;
     private int f = 2;
     private final int JUMP_SPEED = 32;
@@ -68,7 +67,7 @@ public class Droid {
         bottom = 64 * 8;
         */
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 player_src[j + (i * 3)] = new Rect(
                     PLAYER_SIZE * (j % 3),
@@ -85,7 +84,7 @@ public class Droid {
                 pos_y - PLAYER_HALFSIZE,
                 pos_x + PLAYER_HALFSIZE + moveX,
                 pos_y + PLAYER_HALFSIZE);
-        canvas.drawBitmap(PLAYER, player_src[porse], player_dst, null);
+        canvas.drawBitmap(PLAYER, player_src[(int) porse], player_dst, null);
 
     }
 
@@ -104,14 +103,18 @@ public class Droid {
         pos_y += 8;
     }
 
+    public void moveUp() {
+        pos_y -= 8;
+    }
+
     public void moveLeft(int speed) {
         if (getLeft() < 0) {
             return;
         }
-        porse++;
+        porse += 0.25;
         porse %= 3;
 
-        moveX += -speed;
+        pos_x += -speed;
 
     }
 
@@ -119,9 +122,9 @@ public class Droid {
         if (getRight() > width) {
             return;
         }
-        porse--;
+        porse -= 0.25;
         porse = porse % 3 + 3;
-        moveX += speed;
+        pos_x += speed;
     }
 
     public void jump(boolean onGround) {
@@ -135,6 +138,10 @@ public class Droid {
             vy += GRAVITY;
             pos_y += vy;
         }
+    }
+
+    public void attack(int a) {
+        porse = a;
     }
     /*
     public void jump(boolean onGround) {
@@ -151,19 +158,15 @@ public class Droid {
     }
 
     public int getLeft() {
-        return pos_x - PLAYER_HALFSIZE + moveX;
+        return pos_x - PLAYER_HALFSIZE;
     }
 
     public int getRight() {
-        return pos_x + PLAYER_HALFSIZE + moveX;
+        return pos_x + PLAYER_HALFSIZE;
     }
 
-    public int getTop() {
-        return pos_y - PLAYER_HALFSIZE;
-    }
+    public int getTop() { return pos_y - PLAYER_HALFSIZE; }
 
-    public int getBottom() {
-        return pos_y + PLAYER_HALFSIZE;
-    }
+    public int getBottom() { return pos_y + PLAYER_HALFSIZE; }
 
 }

@@ -18,12 +18,15 @@ public class Ground {
     private final Bitmap BACKGROUND;
     private final int HALF_CHIPLEN;
     private final Rect map_dst = new Rect();
+    private Rect collision_rect = new Rect();
     private final Rect screen_dst;
     private final int MAP_LAST;
     private int width;
     private int height;
     private int moveX = 0;
     private int pos_x = 0;
+    private boolean bottom1;
+    private boolean bottom2;
     private List<List<Integer>> stage;
 
     private MapCell[] mapcell = {
@@ -60,7 +63,7 @@ public class Ground {
     public void drawMap(Canvas canvas) {
         canvas.drawBitmap(BACKGROUND, null, screen_dst, null);
 
-        for (int x = (width)  / MAPCHIP_SIZE; 0 <= x; x--) {
+        for (int x = width  / MAPCHIP_SIZE; 0 <= x; x--) {
             for (int y = height / MAPCHIP_SIZE; 0 <= y; y--) {
 
                 if (stage.get(y).get(x + pos_x) == 0) {
@@ -99,19 +102,30 @@ public class Ground {
     */
 
     //64px collision
-    public boolean collisionBottom(int x, int y) {
+    public boolean collisionBottom(int left, int right, int y) {
         if (y / MAPCHIP_SIZE + 1 > height / MAPCHIP_SIZE) {
             return false;
         }
+        //Log.d("checkleft", "collisionBottom: left" + left);
+        //Log.d("checkright", "collisionBottom: right" + right);
+        left = left / MAPCHIP_SIZE + pos_x;
+        right = right / MAPCHIP_SIZE + pos_x - 1;
+
+
+
         //Log.d("checkXY", "collisionRight: y, x" + (y / MAPCHIP_SIZE + 1) + "," +(x / MAPCHIP_SIZE + pos_x - 1));
         //Log.d("check_cell", "collisionRight: " + mapcell[stage.get(y / MAPCHIP_SIZE).get(((x - 10) + (pos_x * MAPCHIP_SIZE)) / MAPCHIP_SIZE)].getGrafic());
-        return mapcell[stage.get(y / MAPCHIP_SIZE + 1).get(x / MAPCHIP_SIZE + pos_x - 1)].getMoveFlag();
+        //return mapcell[stage.get(y / MAPCHIP_SIZE + 1).get((x - moveX) / MAPCHIP_SIZE + pos_x - 1)].getMoveFlag();
+        bottom1 = mapcell[stage.get(y / MAPCHIP_SIZE + 1).get(left)].getMoveFlag();
+        bottom2 = mapcell[stage.get(y / MAPCHIP_SIZE + 1).get(right)].getMoveFlag();
+        return bottom1 || bottom2;
     }
 
     public boolean collisionRight(int x, int y) {
-        Log.d("checkXY", "collisionRight: y, x" + (y / MAPCHIP_SIZE + 1) + "," + (x / MAPCHIP_SIZE + pos_x));
+        Log.d("checkXY", "collisionRight: y, x" + (y / MAPCHIP_SIZE + 1) + "," + ((x - moveX) / MAPCHIP_SIZE + pos_x));
         //Log.d("check_cell", "collisionRight: " + mapcell[stage.get(y / MAPCHIP_SIZE).get(((x - 10) + (pos_x * MAPCHIP_SIZE)) / MAPCHIP_SIZE)].getGrafic());
-        return mapcell[stage.get(y / MAPCHIP_SIZE + 1).get(x / MAPCHIP_SIZE + pos_x)].getMoveFlag();
+
+        return mapcell[stage.get(y / MAPCHIP_SIZE + 1).get((x - moveX) / MAPCHIP_SIZE + pos_x)].getMoveFlag();
     }
 
     public boolean collisionLeft(int x, int y) {
@@ -123,6 +137,18 @@ public class Ground {
 
     public boolean collisionTop(int x, int y) {
         return mapcell[stage.get(y / MAPCHIP_SIZE - 2).get(x / MAPCHIP_SIZE + moveX)].getMoveFlag();
+    }
+
+    public void collisionHadou(int x, int y) {
+        x = x / MAPCHIP_SIZE + pos_x;
+        y = y / MAPCHIP_SIZE + 1;
+        Log.d("checkX", "collisionHadou: x " + x);
+        Log.d("checkY", "collisionHadou: x " + y);
+
+        if (stage.get(y).get(x) != 0) {
+            stage.get(y).set(x, 0);
+            Log.d("check_hadou", "collisionHadou: ok");
+        }
     }
 
     public void moveLeft() {
