@@ -23,17 +23,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private List<List<Integer>> stage;
     private int inputFlag = 0x00;
     private int speed = 8;
-    private boolean moveFlag = false;
     private int power;
     private Bitmap hadou;
+    private int width;
     private static final long DRAW_INTERVAL = 1000 / 60;
     private DrawThread drawThread;
     private boolean onGround = false;
-    private final List<WaveBullet> bulletList = new ArrayList<>();
+    private WaveBullet bullet;
     private boolean shoot = false;
 
     public GameView(Context context, Bitmap blocks, Bitmap background, Bitmap player, Bitmap hadou, int layoutWidth, int layoutHeight, InputStream[] is) {
         super(context);
+        width = layoutWidth;
         this.hadou = hadou;
         map = new Map(is);
         stage = map.mapCreate();
@@ -109,21 +110,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private void drawGame(Canvas canvas) {
         ground.drawMap(canvas);
         droid.drawPlayer(canvas);
-        drawObject(canvas, bulletList, droid.getLeft(), droid.getTop(), power, shoot);
-        if(!ground.collisionBottom(droid.getRight(), droid.getBottom())) {
-            Log.d("checkcenter", "move: onGround" + droid.checkCenter());
-            droid.moveDown();
-            onGround = false;
-            return;
+        droid.moveDown();
+        if(ground.collisionBottom(droid.getLeft(), droid.getRight(), droid.getBottom())) {
+            droid.moveUp();
+            onGround = true;
         }
-        onGround = true;
-    }
-
-    private static void drawObject(Canvas canvas, List<WaveBullet> waveBullets, int width, int height,int power, boolean shoot) {
-        for (int i = 0; i < waveBullets.size(); i++) {
-            WaveBullet bullet = waveBullets.get(i);
+        if (bullet != null) {
+            if (bullet.getPosX() > width) {
+                bullet = null;
+                return;
+            }
             bullet.draw(canvas, power);
-            //bullet.move(shoot);
+            bullet.move(shoot);
+            ground.collisionHadou(bullet.getPosX(), bullet.getPosY());
         }
     }
 
@@ -148,30 +147,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void attack_push() {
+        power = 0;
+        droid.attack(6);
         shoot = false;
-        if (power > 100) {
-            return;
-        }
         inputFlag |= 0x08;
-        power += 5;
     }
 
     public void attack_pull() {
+        droid.attack(7);
         shoot = true;
         inputFlag &= ~0x0F;
     }
 
     public void resetFlag() {
-        moveFlag = false;
         inputFlag &= ~0x0F;
-    }
-
-    private void fire(int x, int y) {
-        if (!bulletList.isEmpty()) {
-            return;
-        }
-        WaveBullet bullet = new WaveBullet(x, y, hadou);
-        bulletList.add(0, bullet);
     }
 
     private void move() {
@@ -188,7 +177,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         if ((inputFlag & 0x02) != 0) {
-            if ((ground.checkRightEnd() || !droid.checkCenter()) && !ground.collisionRight(droid.getRight(), droid.getTop())) {
+            if ((ground.checkRightEnd() || !droid.checkCenter()) && !ground.collisionRight(droid.getRight(), droid.getBottom())) {
                 droid.moveRight(speed);
                 return;
             }
@@ -201,14 +190,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         if ((inputFlag & 0x04) != 0 ) {
-            Log.d("checkcenter", "move: onGround" + droid.checkCenter());
             droid.jump(onGround);
             droid.moveDown();
+            onGround = false;
             return;
         }
 
         if ((inputFlag & 0x08) != 0) {
-            fire(droid.getLeft(), droid.getTop());
+            if (power > 75) return;
+            if (bullet != null) bullet = null;
+            power++;
+            bullet = new WaveBullet(droid.getLeft(), droid.getTop(), hadou);
             return;
         }
     }
